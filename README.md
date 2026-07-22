@@ -4,8 +4,6 @@ Type a URL, watch a real browser open it, find the contact page, and fill the fo
 
 Cloudflare Worker + Browser Run. Live View streams the session into an iframe, so you see every keystroke as it happens.
 
-This is steps 1–3 of the plan: session, live view, deterministic fill. No LLM yet — the hook for it is marked in `src/automate.ts`.
-
 ## Setup
 
 ```bash
@@ -38,14 +36,4 @@ npm run dev
 ```bash
 wrangler secret put CF_API_TOKEN
 npm run deploy
-```
-
-## Layout
-
-```
-src/index.ts     routes, SSE stream
-src/session.ts   creates the CDP session, returns the Live View URL
-src/automate.ts  the browser work + the in-page extraction functions
-src/dummy.ts     heuristic field -> value mapping   <- swap for Gemini
-src/ui.ts        the single page
 ```
