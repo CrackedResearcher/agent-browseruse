@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "formfill-live",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Browser Run binding. Available on the Workers Free plan
+  // (10 min browser time/day, 3 concurrent browsers).
+  "browser": {
+    "binding": "BROWSER"
+  },
+
+  "vars": {
+    // Fill this in, or set it in .dev.vars for local dev.
+    "CF_ACCOUNT_ID": ""
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}
