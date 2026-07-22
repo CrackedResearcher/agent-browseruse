@@ -40,10 +40,6 @@ wrangler secret put CF_API_TOKEN
 npm run deploy
 ```
 
-## Budget
-
-Workers Free gives you 10 minutes of browser time per day and 3 concurrent browsers. A run takes roughly 20–40 seconds, so you get 15–25 runs a day. Sessions idle-close after the `keep_alive` you pass in (10 minutes max), and every idle second counts, so don't leave tabs open.
-
 ## Layout
 
 ```
@@ -53,30 +49,3 @@ src/automate.ts  the browser work + the in-page extraction functions
 src/dummy.ts     heuristic field -> value mapping   <- swap for Gemini
 src/ui.ts        the single page
 ```
-
-## Verify it in order
-
-1. `npm run dev`, open the page, press Run against `https://example.com`. You should see the page appear in the iframe within a few seconds. That proves session + Live View.
-2. Try a site with a real contact form. Watch the log — it prints every field it found with the selector it generated. Wrong selectors show up here, not later.
-3. Only then tick **Click submit**.
-
-If the iframe stays blank but the log advances, `live.browser.run` is refusing to be framed. Open the URL from the log in a new tab instead — the automation is unaffected.
-
-## Adding Gemini (step 4)
-
-In `src/automate.ts`:
-
-```ts
-const actions: FillAction[] = planFills(fields);
-```
-
-Replace with a call that sends `fields` to Gemini and gets back the same array shape. Ask for `responseMimeType: "application/json"` and a `responseSchema` of `{frame, selector, action, value}[]`, and tell it to only use selectors from the input. Keep `planFills` as the fallback when the request 429s — free tier RPM is low enough that you will hit it.
-
-Step 5 is the contact-page pick: replace `FIND_CONTACT_LINK` with a call that sends `[{href, text}]` to Gemini. Keep the regex as the fast path so most sites never spend a request.
-
-## Notes
-
-- `browser.disconnect()`, never `browser.close()` — closing ends the session and the live view goes black.
-- Hidden and off-canvas inputs are filtered out during extraction. Those are honeypots; filling them flags you as a bot.
-- Fields are collected across all frames, since HubSpot and Typeform embeds live in iframes.
-- Submit is off by default. Point this at sites you own or a test form.
